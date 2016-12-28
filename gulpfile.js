@@ -47,7 +47,7 @@ module.exports = function(gulp) {
       .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
       .pipe($.if('*.js', $.uglify()))
       .pipe($.if('*.css', $.cleanCss({compatibility: '*'})))
-      .pipe($.rev())
+      .pipe($.if('!index.html', $.rev()))
       .pipe($.revReplace())
       .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
       .pipe(gulp.dest('dist'));
