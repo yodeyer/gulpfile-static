@@ -50,6 +50,7 @@ module.exports = function(gulp) {
       .pipe($.if('!index.html', $.rev()))
       .pipe($.revReplace())
       .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
+      .pipe(gulp.dest('dist'))
       .pipe($.gzip())
       .pipe(gulp.dest('dist'));
   });
