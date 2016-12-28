@@ -1,10 +1,10 @@
 'use strict';
 
-import gulpLoadPlugins from 'gulp-load-plugins';
-import browserSync from 'browser-sync';
-import del from 'del';
-import {stream as wiredep} from 'wiredep';
-import path from 'path';
+const gulpLoadPlugins = require('gulp-load-plugins');
+const browserSync = require('browser-sync');
+const del = require('del');
+const wiredep = require('wiredep').stream;
+const path = require('path');
 
 const $ = gulpLoadPlugins();
 const reload = browserSync.reload;
@@ -43,15 +43,11 @@ module.exports = function(gulp) {
   gulp.task('lint:test', lint('test/spec/**/*.js'));
 
   gulp.task('html', ['styles'], () => {
-    const assets = $.useref.assets({searchPath: ['.tmp', 'app', '.']});
-
     return gulp.src('app/*.html')
-      .pipe(assets)
+      .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
       .pipe($.if('*.js', $.uglify()))
-      .pipe($.if('*.css', $.minifyCss({compatibility: '*'})))
+      .pipe($.if('*.css', $.cleanCss({compatibility: '*'})))
       .pipe($.rev())
-      .pipe(assets.restore())
-      .pipe($.useref())
       .pipe($.revReplace())
       .pipe($.if('*.html', $.minifyHtml({conditionals: true, loose: true})))
       .pipe(gulp.dest('dist'));
